@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calenda – Smart Monthly Planner & Task Alerts</title>
+    <meta name="description" content="Calenda is a modern, responsive monthly calendar and smart reminder application featuring interactive day grid, custom categories, audio alarm chimes, and real-time task tracking.">
+    
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/static/css/style.css?v=3">
+    
+    <!-- Favicon PNG -->
+    <link rel="icon" type="image/png" href="/static/img/logo.png?v=3">
+</head>
+<body>
+    <!-- Background Ambient Glow Accents -->
+    <div class="ambient-glow glow-1" aria-hidden="true"></div>
+    <div class="ambient-glow glow-2" aria-hidden="true"></div>
+
+    <!-- App Wrapper -->
+    <div class="app-container">
+        <!-- Top Navigation Header -->
+        <header class="app-header" id="app-header">
+            <div class="header-left">
+                <div class="brand-badge">
+                    <img src="/static/img/logo.png?v=3" alt="Calenda Logo" class="brand-logo-img" id="app-brand-logo">
+                    <div class="brand-text">
+                        <h1 class="brand-title" id="page-main-heading">Calenda</h1>
+                        <p class="brand-tagline">Smart monthly scheduling & proactive alerts</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Digital Clock -->
+            <div class="header-center">
+                <div class="live-clock-card" id="live-clock-card" title="Current system time">
+                    <span class="clock-pulse-dot" aria-hidden="true"></span>
+                    <span class="clock-time" id="live-clock-display">00:00:00 AM</span>
+                    <span class="clock-date-divider" aria-hidden="true">•</span>
+                    <span class="clock-date" id="live-date-display">Today</span>
+                </div>
+            </div>
+
+            <!-- Top Action Controls -->
+            <div class="header-right">
+                <button type="button" class="btn btn-secondary" id="btn-test-alarm" title="Play test audio chime and alert popup">
+                    <span class="btn-icon">🔔</span>
+                    <span class="btn-label">Test Alarm</span>
+                </button>
+
+                <button type="button" class="btn btn-icon-only" id="btn-theme-toggle" title="Toggle Light / Dark mode" aria-label="Toggle theme">
+                    <span class="theme-icon-dark" aria-hidden="true">🌙</span>
+                    <span class="theme-icon-light" aria-hidden="true">☀️</span>
+                </button>
+
+                <button type="button" class="btn btn-primary" id="btn-open-create-modal">
+                    <span class="btn-icon">＋</span>
+                    <span class="btn-label">New Reminder</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Metrics Dashboard Banner -->
+        <section class="stats-ribbon" aria-label="Reminders Overview">
+            <div class="stat-card" id="stat-total" role="button" tabindex="0" title="Click to view all reminders">
+                <div class="stat-icon-wrapper stat-blue">
+                    <span>📋</span>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="val-stat-total">0</span>
+                    <span class="stat-label">Total Reminders</span>
+                </div>
+            </div>
+
+            <div class="stat-card" id="stat-today-pending" role="button" tabindex="0" title="Click to view today's due reminders">
+                <div class="stat-icon-wrapper stat-rose">
+                    <span>⏰</span>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="val-stat-today">0</span>
+                    <span class="stat-label">Due Today</span>
+                </div>
+            </div>
+
+            <div class="stat-card" id="stat-upcoming" role="button" tabindex="0" title="Click to view upcoming events">
+                <div class="stat-icon-wrapper stat-amber">
+                    <span>🚀</span>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="val-stat-upcoming">0</span>
+                    <span class="stat-label">Upcoming</span>
+                </div>
+            </div>
+
+            <div class="stat-card" id="stat-completed" role="button" tabindex="0" title="Click to view completed items">
+                <div class="stat-icon-wrapper stat-emerald">
+                    <span>✓</span>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="val-stat-completed">0</span>
+                    <span class="stat-label">Completed</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace: Calendar (Left) & Reminders Manager (Right) -->
+        <main class="main-layout" id="main-content">
+            <!-- Left Side: Interactive Calendar Section -->
+            <section class="calendar-section glass-panel" aria-labelledby="calendar-heading">
+                <div class="calendar-header">
+                    <div class="calendar-nav-group">
+                        <button type="button" class="btn-cal-nav" id="btn-prev-month" title="Previous Month" aria-label="Previous Month">
+                            <span>◀</span>
+                        </button>
+                        <h2 class="calendar-month-title" id="calendar-heading">October 2026</h2>
+                        <button type="button" class="btn-cal-nav" id="btn-next-month" title="Next Month" aria-label="Next Month">
+                            <span>▶</span>
+                        </button>
+                    </div>
+
+                    <button type="button" class="btn btn-subtle" id="btn-jump-today">
+                        <span>Today</span>
+                    </button>
+                </div>
+
+                <!-- Weekday Headers -->
+                <div class="calendar-weekdays" role="row">
+                    <div class="weekday-col" role="columnheader">Mon</div>
+                    <div class="weekday-col" role="columnheader">Tue</div>
+                    <div class="weekday-col" role="columnheader">Wed</div>
+                    <div class="weekday-col" role="columnheader">Thu</div>
+                    <div class="weekday-col" role="columnheader">Fri</div>
+                    <div class="weekday-col weekend" role="columnheader">Sat</div>
+                    <div class="weekday-col weekend" role="columnheader">Sun</div>
+                </div>
+
+                <!-- Calendar Grid Days -->
+                <div class="calendar-days-grid" id="calendar-days-container" role="grid" aria-label="Month Days Grid">
+                    <!-- Populated dynamically via JavaScript -->
+                </div>
+
+                <!-- Category Legend -->
+                <div class="calendar-legend">
+                    <span class="legend-title">Categories:</span>
+                    <div class="legend-tags">
+                        <span class="badge cat-work">💼 Work</span>
+                        <span class="badge cat-personal">🏠 Personal</span>
+                        <span class="badge cat-meeting">👥 Meeting</span>
+                        <span class="badge cat-urgent">🚨 Urgent</span>
+                        <span class="badge cat-general">📌 General</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Side: Reminders Detail & Management Panel -->
+            <section class="reminders-section glass-panel" aria-labelledby="reminders-panel-title">
+                <div class="reminders-top-bar">
+                    <div class="reminders-title-wrapper">
+                        <h2 class="reminders-panel-title" id="reminders-panel-title">Selected Date Reminders</h2>
+                        <span class="badge badge-count" id="badge-reminder-count">0 items</span>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="search-box">
+                        <span class="search-icon" aria-hidden="true">🔍</span>
+                        <input type="text" id="input-search-reminders" placeholder="Search tasks, tags..." aria-label="Search reminders">
+                        <button type="button" class="btn-clear-search hidden" id="btn-clear-search" aria-label="Clear search">✕</button>
+                    </div>
+                </div>
+
+                <!-- Filter Tabs Navigation -->
+                <nav class="filter-nav" aria-label="Reminder filters">
+                    <button type="button" class="filter-tab active" data-filter="date" id="filter-btn-date">
+                        <span>📅 Selected Date</span>
+                    </button>
+                    <button type="button" class="filter-tab" data-filter="today" id="filter-btn-today">
+                        <span>⭐ Today</span>
+                    </button>
+                    <button type="button" class="filter-tab" data-filter="upcoming" id="filter-btn-upcoming">
+                        <span>🚀 Upcoming</span>
+                    </button>
+                    <button type="button" class="filter-tab" data-filter="all" id="filter-btn-all">
+                        <span>📋 All Reminders</span>
+                    </button>
+                </nav>
+
+                <!-- Reminders Cards List Container -->
+                <div class="reminders-list" id="reminders-list-container" role="region" aria-live="polite">
+                    <!-- Rendered dynamically -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal: Create / Edit Reminder Dialog -->
+    <div class="modal-backdrop hidden" id="modal-reminder-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-dialog-title">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-dialog-title">➕ Add New Reminder</h3>
+                <button type="button" class="btn-modal-close" id="btn-close-modal" aria-label="Close dialog">✕</button>
+            </div>
+
+            <form id="form-reminder" class="modal-form">
+                <input type="hidden" id="form-reminder-id" value="">
+
+                <!-- Title Input -->
+                <div class="form-group">
+                    <label for="form-title" class="form-label">Reminder Title <span class="required">*</span></label>
+                    <input type="text" id="form-title" class="form-input" placeholder="e.g. Sprint Planning, Dental Checkup, Tax Filing" required>
+                </div>
+
+                <!-- Date & Quick Buttons -->
+                <div class="form-group">
+                    <label for="form-date" class="form-label">Date <span class="required">*</span></label>
+                    <div class="input-with-shortcuts">
+                        <input type="date" id="form-date" class="form-input" required>
+                        <button type="button" class="btn btn-shortcut" id="btn-shortcut-today">Today</button>
+                        <button type="button" class="btn btn-shortcut" id="btn-shortcut-tomorrow">Tomorrow</button>
+                    </div>
+                </div>
+
+                <!-- Time & Category In Grid -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="form-time" class="form-label">Scheduled Time (HH:MM) <span class="required">*</span></label>
+                        <input type="time" id="form-time" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form-category" class="form-label">Category / Tag</label>
+                        <select id="form-category" class="form-select">
+                            <option value="General">📌 General</option>
+                            <option value="Work">💼 Work</option>
+                            <option value="Personal">🏠 Personal</option>
+                            <option value="Meeting">👥 Meeting</option>
+                            <option value="Urgent">🚨 Urgent</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Description / Notes -->
+                <div class="form-group">
+                    <label for="form-desc" class="form-label">Notes & Details (Optional)</label>
+                    <textarea id="form-desc" class="form-textarea" rows="3" placeholder="Add location, meeting links, or reminder context..."></textarea>
+                </div>
+
+                <!-- Alarm Toggle -->
+                <div class="form-switch-row">
+                    <label class="switch-container">
+                        <input type="checkbox" id="form-alarm-enabled" checked>
+                        <span class="switch-slider"></span>
+                    </label>
+                    <div class="switch-text">
+                        <span class="switch-title">Audible Alarm & Screen Alert</span>
+                        <span class="switch-hint">Play chime sound and display notification banner when due</span>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-subtle" id="btn-cancel-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-reminder">
+                        <span>Save Reminder</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating Top-Level Alarm Banner / Popup for Due Reminders -->
+    <div class="alarm-toast-container" id="alarm-toast-container" aria-live="assertive">
+        <!-- Alarm cards inserted dynamically -->
+    </div>
+
+    <!-- Application Script -->
+    <script src="/static/js/app.js?v=3"></script>
+</body>
+</html>
